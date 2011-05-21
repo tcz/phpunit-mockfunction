@@ -1,0 +1,1 @@
+PHPUnit extension that uses runkit to mock PHP functions (both user-defined and system) and use mockobject-style invocation matchers, parameter constraints and all that magic.
