@@ -37,12 +37,6 @@ class Tests_Extensions_MockFunctionTest extends PHPUnit_Framework_TestCase
         $this->test_scope_object = new TestScopeObject();
     }
 
-    protected function onNotSuccessfulTest( Exception $e )
-    {
-        var_dump( $e->getMessage() );
-        var_dump( $e->getTraceAsString() );
-    }
-
     /**
      * Test simple function return faking without consraints.
      */
@@ -97,6 +91,14 @@ class Tests_Extensions_MockFunctionTest extends PHPUnit_Framework_TestCase
         $this->object->restore();
     }
 
+    /**
+     * When runkit.internal_override is Off, we cannot mock internal functions,
+     * so we make a proxy around them and mock the proxy.
+     *
+     * @staticvar boolean $internal_override_on Tell is the config value is on.
+     * @param type $function_name The (internal) function name to mock.
+     * @return string The final function name (either proxy or the original).
+     */
     protected static function getFunctionName( $function_name )
     {
         // Memoization for config value.
