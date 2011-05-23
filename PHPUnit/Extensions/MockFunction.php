@@ -120,7 +120,7 @@ class PHPUnit_Extensions_MockFunction
 	 *
 	 * Makes sure the replaced functions are finally cleared in case runkit
 	 * "forgets" to remove them in the end of the request.
-	 * It is still higgly recommended to call restore() explciitly!
+	 * It is still highly recommended to call restore() explicitly!
 	 */
 	public function __destruct()
 	{
@@ -146,9 +146,9 @@ class PHPUnit_Extensions_MockFunction
 		}
 
 		if ( isset( self::$instances[$this->id] ) )
-		{
-		unset( self::$instances[$this->id] );
-	}
+                {
+                    unset( self::$instances[$this->id] );
+                }
 	}
 
 	/**
@@ -274,6 +274,9 @@ CALLBACK;
 	 * In theory we should instement the distance by one because when we call this
 	 * method, we don't count it itself to the callstack, but since the stack is
 	 * 0-indexed, we can avoid this step.
+     *
+     * Function calls are ignored, the first call after $distance that is made form
+     * is returned.
 	 *
 	 * @param type $distance The distance in the call stack from the current call and the desired one.
 	 * @return object
@@ -282,10 +285,19 @@ CALLBACK;
 	{
 		$backtrace = debug_backtrace();
 
-		if ( isset( $backtrace[$distance]['object'] ) )
-		{
-			return $backtrace[$distance]['object'];
-		}
+        do
+        {
+            if ( isset( $backtrace[$distance]['object'] ) )
+            {
+                return $backtrace[$distance]['object'];
+            }
+
+            /* If there is no object assiciated to this call, we go further until
+             * the next one.
+             * Funcsion calls and functions like "user_call_func" get ignored.
+             */
+            ++$distance;
+        } while ( isset( $backtrace[$distance] ) );
 
 		return null;
 	}
