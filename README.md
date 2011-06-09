@@ -1,7 +1,7 @@
 
 ## Introduction ##
 
-MockFunction is a PHPUnit extension that uses `runkit` to mock PHP functions (both user-defined and system) and use mockobject-style invocation matchers, parameter constraints and all that magic.
+MockFunction is a PHPUnit extension that uses `runkit` to mock PHP functions (both user-defined and system) or static methods and use mockobject-style invocation matchers, parameter constraints and all that magic.
 
 To use this extension, you have to install `runkit` first (PECL package). For a working version see https://github.com/zenovich/runkit/
 
@@ -25,6 +25,10 @@ Variable `$einsteins_clock` contains the value that we will return instead of th
 In the next line we set up the mock function with the fluent interface of a mock object.
 
 The mocked function is active for the test object instance until `$flux_capacitor->restore();` is called. If you happen to forget this in the end of the test case, normally it is not a problem, because you will test anew instance of your tested class with each test case.
+
+To mock static methods, you can use PHPUnit_Extensions_MockStaticMethod class. It work int the same way as with functions:
+
+	$mocked_static = new PHPUnit_Extensions_MockStaticMethod( 'MyClass::myMethod', $this->object );
 
 ## Advanced mocking ##
 

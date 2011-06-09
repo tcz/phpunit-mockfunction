@@ -100,14 +100,24 @@ class PHPUnit_Extensions_MockFunction
 	{
 		if ( !function_exists( 'runkit_function_redefine' ) )
 		{
-			trigger_error( 'Runkit is not installed.' );
+			trigger_error( 'Runkit is not installed.', E_USER_ERROR );
 		}
-
+		
+		// APC doesn't quite like runkit.
+		// When they work together, it might result dead process.
+		if ( function_exists( 'apc_clear_cache' ) )
+		{
+			apc_clear_cache();
+		}
+		
 		$this->id				= self::$next_id;
 		$this->function_name	= $function_name;
 		$this->scope_object		= $scope_object;
 		$this->test_case		= self::findTestCase();
-		$this->mock_object		= $this->test_case->getMock( 'Mock_' . $this->function_name . '_' . $this->id, array( 'invoked' ) );
+		$this->mock_object		= $this->test_case->getMock( 
+				'Mock_' . str_replace( '::', '__', $this->function_name ) . '_' . $this->id, 
+				array( 'invoked' ) 
+		);
 
 		++self::$next_id;
 		self::$instances[$this->id] = $this;
@@ -146,9 +156,9 @@ class PHPUnit_Extensions_MockFunction
 		}
 
 		if ( isset( self::$instances[$this->id] ) )
-                {
-                    unset( self::$instances[$this->id] );
-                }
+				{
+					unset( self::$instances[$this->id] );
+				}
 	}
 
 	/**
@@ -159,7 +169,7 @@ class PHPUnit_Extensions_MockFunction
 	 * @param type $arguments 0-indexed array of arguments with which the mocked function was called.
 	 * @return mixed
 	 */
-	public function invoked( $arguments )
+	public function invoked( array $arguments )
 	{
 		// Original function is called when the invocation is ousides he scope or
 		// the invocation comes from this object.
@@ -168,11 +178,22 @@ class PHPUnit_Extensions_MockFunction
 		{
 			if ( isset( $this->restore_name ) )
 			{
-				return call_user_func_array( $this->restore_name, $arguments );
+				return $this->callOriginal( $arguments );
 			}
-			trigger_error( 'Undefined function: ' . $this->function_name );
+			trigger_error( 'Undefined function: ' . $this->function_name, E_USER_ERROR );
 		}
 		return call_user_func_array( array( $this->mock_object, __FUNCTION__ ), $arguments );
+	}
+	
+	/**
+	 * Calls original function that we temporary renamed. This maintains the oriignal functionality.
+	 *
+	 * @param type $arguments
+	 * @return mixed
+	 */
+	protected function callOriginal( array $arguments )
+	{
+		return call_user_func_array( $this->restore_name, $arguments );
 	}
 
 	/**
@@ -222,7 +243,7 @@ class PHPUnit_Extensions_MockFunction
 
 		if ( !isset( $calling_test ) )
 		{
-			trigger_error( 'No calling test found.' );
+			trigger_error( 'No calling test found.', E_USER_ERROR );
 		}
 
 		return $calling_test['object'];
@@ -274,9 +295,9 @@ CALLBACK;
 	 * In theory we should instement the distance by one because when we call this
 	 * method, we don't count it itself to the callstack, but since the stack is
 	 * 0-indexed, we can avoid this step.
-     *
-     * Function calls are ignored, the first call after $distance that is made form
-     * is returned.
+	 *
+	 * Function calls are ignored, the first call after $distance that is made form
+	 * is returned.
 	 *
 	 * @param type $distance The distance in the call stack from the current call and the desired one.
 	 * @return object
@@ -285,19 +306,19 @@ CALLBACK;
 	{
 		$backtrace = debug_backtrace();
 
-        do
-        {
-            if ( isset( $backtrace[$distance]['object'] ) )
-            {
-                return $backtrace[$distance]['object'];
-            }
+		do
+		{
+			if ( isset( $backtrace[$distance]['object'] ) )
+			{
+				return $backtrace[$distance]['object'];
+			}
 
-            /* If there is no object assiciated to this call, we go further until
-             * the next one.
-             * Funcsion calls and functions like "user_call_func" get ignored.
-             */
-            ++$distance;
-        } while ( isset( $backtrace[$distance] ) );
+			/* If there is no object assiciated to this call, we go further until
+			 * the next one.
+			 * Funcsion calls and functions like "user_call_func" get ignored.
+			 */
+			++$distance;
+		} while ( isset( $backtrace[$distance] ) );
 
 		return null;
 	}
