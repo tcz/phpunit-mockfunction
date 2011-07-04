@@ -67,11 +67,11 @@ class PHPUnit_Extensions_MockStaticMethod extends PHPUnit_Extensions_MockFunctio
 	 */
 	protected function getClassAndMethod()
 	{
-		static $class_and_method;
+		static $classses_and_methods = array();
 
-		if ( isset( $class_and_method ) )
+		if ( isset( $classses_and_methods[$this->function_name] ) )
 		{
-			return $class_and_method;
+			return $classses_and_methods[$this->function_name];
 		}
 
 		$class_and_method = explode( '::', $this->function_name );
@@ -91,6 +91,6 @@ class PHPUnit_Extensions_MockStaticMethod extends PHPUnit_Extensions_MockFunctio
 			trigger_error( "Static method '{$this->function_name}' must exist and be public.", E_USER_ERROR );
 		}
 
-		return $class_and_method;
+		return $classses_and_methods[$this->function_name] = $class_and_method;
 	}
 }
