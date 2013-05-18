@@ -1,0 +1,13 @@
+{
+	"name": "tcz/phpunit-mockfunction",
+	"description": "PHPUnit extension that uses runkit to mock PHP functions (both user-defined and system)",
+	"keywords": [],
+	"require": {
+		"ext-runkit": "*"
+	},
+	"autoload": {
+		"psr-0": {
+			"PHPUnit": "."
+		}
+	}
+}
