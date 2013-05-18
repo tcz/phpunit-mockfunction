@@ -6,9 +6,9 @@
 		"ext-runkit": "*"
 	},
 	"autoload": {
-		"psr-0": {
-			"PHPUnit": "."
-		}
+		"classmap": [
+			"PHPUnit/"
+		]
 	}
 }
 	
