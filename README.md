@@ -56,3 +56,6 @@ You can use all invocation matchers, constraints and stub returns, for example:
         )->will( $this->returnValue( true ) );
 
 For further information see http://www.phpunit.de/manual/3.0/en/mock-objects.html
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/tcz/phpunit-mockfunction/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
