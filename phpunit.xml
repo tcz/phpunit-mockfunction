@@ -1,0 +1,17 @@
+<phpunit colors="true">
+    <testsuite name="phpunit-mockfunction Test Suite">
+        <directory>./Tests</directory>
+    </testsuite>
+
+    <groups>
+        <exclude>
+            <group>PHPUnit</group>
+        </exclude>
+    </groups>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./PHPUnit</directory>
+        </whitelist>
+    </filter>
+</phpunit>
