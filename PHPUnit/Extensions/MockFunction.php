@@ -58,7 +58,7 @@ class PHPUnit_Extensions_MockFunction
 	 *
 	 * If the function did not exist before mocking, it's empty.
 	 *
-	 * @var type
+	 * @var string
 	 */
 	protected $restore_name;
 
@@ -72,7 +72,7 @@ class PHPUnit_Extensions_MockFunction
 	/**
 	 * List of active mock object instances (those that are not restored) with their ID as key.
 	 *
-	 * @var type
+	 * @var PHPUnit_Extensions_MockFunction[]
 	 */
 	protected static $instances = array();
 
@@ -114,10 +114,13 @@ class PHPUnit_Extensions_MockFunction
 		$this->function_name	= $function_name;
 		$this->scope_object		= $scope_object;
 		$this->test_case		= self::findTestCase();
-		$this->mock_object		= $this->test_case->getMock( 
-				'Mock_' . str_replace( '::', '__', $this->function_name ) . '_' . $this->id, 
-				array( 'invoked' ) 
-		);
+		$this->mock_object		=
+			$this->test_case->getMockBuilder(
+				'Mock_' . str_replace( '::', '__', $this->function_name ) . '_' . $this->id
+			)
+			->disableAutoload()
+			->setMethods(array( 'invoked' ))
+			->getMock();
 
 		++self::$next_id;
 		self::$instances[$this->id] = $this;
@@ -229,7 +232,7 @@ class PHPUnit_Extensions_MockFunction
 	 * Finds the rist object in the call cstack that is instance of a PHPUnit test case.
 	 *
 	 * @see self::TESTCASE_CLASSNAME
-	 * @return object
+	 * @return PHPUnit_Framework_TestCase
 	 */
 	public static function findTestCase()
 	{
