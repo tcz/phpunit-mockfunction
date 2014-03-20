@@ -1,4 +1,3 @@
-
 ## Introduction ##
 
 MockFunction is a PHPUnit extension that uses `runkit` to mock PHP functions (both user-defined and system) or static methods and use mockobject-style invocation matchers, parameter constraints and all that magic.
@@ -57,5 +56,5 @@ You can use all invocation matchers, constraints and stub returns, for example:
 
 For further information see http://www.phpunit.de/manual/3.0/en/mock-objects.html
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/tcz/phpunit-mockfunction/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/tcz/phpunit-mockfunction/trend.png)](https://bitdeli.com/free "Bitdeli Badge") [![Build Status](https://travis-ci.org/tcz/phpunit-mockfunction.svg?branch=master)](https://travis-ci.org/tcz/phpunit-mockfunction)
 
