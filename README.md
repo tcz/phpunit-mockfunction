@@ -6,9 +6,21 @@ To use this extension, you have to install `runkit` first (PECL package). For a 
 
 To be able to mock system function (not user-defined ones), you need to turn on `runkit.internal_override` in the PHP config.
 
+## Installation ##
+
+If you use composer, installing MockFunction is easy:
+
+    "require-dev": {
+        "tcz/phpunit-mockfunction": "1.0.0"
+    }
+    
+Then
+
+    php composer.phar update tcz/phpunit-mockfunction
+
 ## Usage ##
 
-Assuming you are in a PHPUnit test.
+Assuming you are in a PHPUnit test:
 
     // Back to the future:
     $flux_capacitor = new PHPUnit_Extensions_MockFunction( 'time', $this->object );
